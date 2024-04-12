@@ -1,0 +1,76 @@
+{
+  "project_info": {
+    "project_number": "810455023367",
+    "project_id": "eqw-violationeye-42382",
+    "storage_bucket": "eqw-violationeye-42382.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:810455023367:android:b23e0f5ed23381c9a18fa2",
+        "android_client_info": {
+          "package_name": "com.example.eqwviolationeye"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "810455023367-am22b6ji8o43p75epua65c44aoionmlv.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD6oy0uJaMa9nD2c7JoXgTduaSozs3CpCM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "810455023367-am22b6ji8o43p75epua65c44aoionmlv.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:810455023367:android:0a49da7cee541923a18fa2",
+        "android_client_info": {
+          "package_name": "com.example.violationeye"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "810455023367-6lt0u13eq4ersrngkk6r0i8q83hmd9mk.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.violationeye",
+            "certificate_hash": "3d167db41e0bfae824392f6112322dbe0a13bfc5"
+          }
+        },
+        {
+          "client_id": "810455023367-am22b6ji8o43p75epua65c44aoionmlv.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD6oy0uJaMa9nD2c7JoXgTduaSozs3CpCM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "810455023367-am22b6ji8o43p75epua65c44aoionmlv.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
