@@ -1,10 +1,12 @@
 package com.example.eqwviolationeye;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
@@ -64,7 +66,18 @@ public class pendingFragment extends Fragment {
                 }
                 arrayAdapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1, arrayList);
                 listView.setAdapter(arrayAdapter);
+                listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                        String selectedItem = (String) parent.getItemAtPosition(position);
+                        Intent i = new Intent(getContext(),postScreen.class);
+                        i.putExtra("date",selectedItem);
+                        startActivity(i);
+                    }
+                });
+
             }
+
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
