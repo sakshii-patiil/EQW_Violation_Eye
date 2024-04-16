@@ -122,7 +122,7 @@ public class IncidentReportScreen extends AppCompatActivity {
                     timestamp = timestamp.substring(0, timestamp.indexOf("G"));
 
                     fetchLocation();
-                    Toast.makeText(getApplicationContext(), timestamp, Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(getApplicationContext(), timestamp, Toast.LENGTH_SHORT).show();
                 }
             }
         }
@@ -169,7 +169,6 @@ public class IncidentReportScreen extends AppCompatActivity {
                                     String city = address.getLocality();
                                     String state = address.getAdminArea();
                                     loc = locality + ", "+ city + ", " + state + ", " + postalCode;
-                                    Toast.makeText(this, loc, Toast.LENGTH_SHORT).show();
                                     addDataToFirebase();
 //                                    addressTextView.setText(completeAddress);
                                 } else {

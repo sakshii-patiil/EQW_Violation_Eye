@@ -24,6 +24,7 @@ public class postScreen extends AppCompatActivity {
     LinearLayout dayDateTimeLayout,locationLayout;
     private DatabaseReference mDatabase;
     String date;
+    String locationData;
 
 
     CardView dayDateTimeCard,locationCard,uploadCard;
@@ -40,8 +41,9 @@ public class postScreen extends AppCompatActivity {
         locationCard = findViewById(R.id.locationCard);
         uploadCard = findViewById(R.id.uploadCard);
         locationLayout = findViewById(R.id.locationLayout);
-        Toast.makeText(postScreen.this, LoginScreen.id, Toast.LENGTH_SHORT).show();
         date = getIntent().getStringExtra("date");
+
+        fetchFromDatabse();
 
         dayDateTimeCard.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -60,31 +62,40 @@ public class postScreen extends AppCompatActivity {
                 TransitionManager.beginDelayedTransition(locationLayout,new AutoTransition());
 
                 location.setVisibility(visibility);
-                mDatabase = FirebaseDatabase.getInstance("https://eqw-violationeye-42382-default-rtdb.firebaseio.com/").getReference(LoginScreen.id).child("pending").child(date);
+                location.setText(locationData);
 
-
-                // Path to the child node you want to retrieve
-                DatabaseReference childRef = mDatabase.child("Location");
-                childRef.addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        String childData = snapshot.getValue(String.class);
-                        //Toast.makeText(getApplicationContext(),childData,Toast.LENGTH_SHORT).show();
-                        if (childData != null) {
-                            // Do something with the retrieved data
-                            location.setText(childData);
-                        }
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
-
-                    }
-                });
             }
         });
 
 
+    }
+
+    void fetchFromDatabse()
+    {
+        mDatabase = FirebaseDatabase.getInstance("https://eqw-violationeye-42382-default-rtdb.firebaseio.com/").getReference(LoginScreen.id).child("pending").child(date);
+
+
+        // Path to the child node you want to retrieve
+        DatabaseReference childRef = mDatabase.child("Location");
+        childRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                locationData = snapshot.getValue(String.class);
+                //Toast.makeText(getApplicationContext(),childData,Toast.LENGTH_SHORT).show();
+                if (locationData != null) {
+                    // Do something with the retrieved data
+                    String[] subAddresses = locationData.split(", ");
+                    Toast.makeText(getApplicationContext(),subAddresses[1],Toast.LENGTH_SHORT).show();
+//                            System.out.println(subAddresses[1]);
+
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
     }
 
 }
