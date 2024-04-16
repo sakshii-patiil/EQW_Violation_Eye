@@ -27,9 +27,6 @@
             android:name=".IncidentReportScreen"
             android:exported="false"></activity>
         <activity
-            android:name=".MapsActivity"
-            android:exported="false"></activity>
-        <activity
             android:name=".LoginScreen"
             android:exported="true">
             <intent-filter>
