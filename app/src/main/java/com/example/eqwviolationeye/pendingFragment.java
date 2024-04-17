@@ -24,6 +24,7 @@ import java.util.ArrayList;
 public class pendingFragment extends Fragment {
     private View group_fregment_view;
     private ListView listView;
+    static public String id;
     private ArrayAdapter<String> arrayAdapter;
     private ArrayList<String> arrayList;
 
@@ -39,8 +40,8 @@ public class pendingFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         group_fregment_view = inflater.inflate(R.layout.fragment_pending, container, false);
-
-        GroupRef = FirebaseDatabase.getInstance("https://eqw-violationeye-42382-default-rtdb.firebaseio.com/").getReference(LoginScreen.id).child("pending");
+        id = getActivity().getIntent().getStringExtra("id");
+        GroupRef = FirebaseDatabase.getInstance("https://eqw-violationeye-42382-default-rtdb.firebaseio.com/").getReference(id).child("pending");
 
 
         RetriveAndDisplayGroup();

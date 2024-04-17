@@ -1,5 +1,7 @@
 package com.example.eqwviolationeye;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.transition.AutoTransition;
 import android.transition.TransitionManager;
@@ -9,6 +11,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 
@@ -21,14 +24,15 @@ import com.google.firebase.database.ValueEventListener;
 
 public class postScreen extends AppCompatActivity {
     TextView dayDateTime,location;
-    LinearLayout dayDateTimeLayout,locationLayout;
+    LinearLayout dayDateTimeLayout,locationLayout,uploadLayout;
     private DatabaseReference mDatabase;
     String date;
     String locationData;
 
 
-    CardView dayDateTimeCard,locationCard,uploadCard;
-
+    CardView dayDateTimeCard,locationCard,submitCard,uploadCard;
+    String[] subAddresses;
+    private static final int PICK_IMAGE_REQUEST_CODE = 1;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,7 +44,9 @@ public class postScreen extends AppCompatActivity {
         dayDateTimeCard = findViewById(R.id.dayDateTiemCard);
         locationCard = findViewById(R.id.locationCard);
         uploadCard = findViewById(R.id.uploadCard);
+        submitCard = findViewById(R.id.submitCard);
         locationLayout = findViewById(R.id.locationLayout);
+
         date = getIntent().getStringExtra("date");
 
         fetchFromDatabse();
@@ -67,12 +73,48 @@ public class postScreen extends AppCompatActivity {
             }
         });
 
+        submitCard.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent pickImageIntent = new Intent(Intent.ACTION_PICK);
+                pickImageIntent.setType("image/*");
 
+                // Start the activity to pick an image
+                startActivityForResult(pickImageIntent, PICK_IMAGE_REQUEST_CODE);
+            }
+        });
+
+
+    }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == PICK_IMAGE_REQUEST_CODE && resultCode == RESULT_OK) {
+            if (data != null && data.getData() != null) {
+                // Get the URI of the selected image
+                Uri imageUri = data.getData();
+
+                // Get the text from the tweet EditText
+
+                String message = "The above vehicle {number plate} is seen violating the traffic rules. I request @"+subAddresses[1]+"CityPolice to take necessary actions asap. It is causing unnecessary chaos in "+subAddresses[0]+" area";
+
+                // Create a new Intent
+                Intent shareIntent = new Intent();
+                shareIntent.setAction(Intent.ACTION_SEND);
+                shareIntent.putExtra(Intent.EXTRA_TEXT, message);
+                shareIntent.putExtra(Intent.EXTRA_STREAM, imageUri);
+                shareIntent.setType("image/*");
+
+                // Start the activity to share the data
+                startActivity(Intent.createChooser(shareIntent, "Share via"));
+            }
+        }
     }
 
     void fetchFromDatabse()
     {
-        mDatabase = FirebaseDatabase.getInstance("https://eqw-violationeye-42382-default-rtdb.firebaseio.com/").getReference(LoginScreen.id).child("pending").child(date);
+        mDatabase = FirebaseDatabase.getInstance("https://eqw-violationeye-42382-default-rtdb.firebaseio.com/").getReference(pendingFragment.id).child("pending").child(date);
 
 
         // Path to the child node you want to retrieve
@@ -84,7 +126,7 @@ public class postScreen extends AppCompatActivity {
                 //Toast.makeText(getApplicationContext(),childData,Toast.LENGTH_SHORT).show();
                 if (locationData != null) {
                     // Do something with the retrieved data
-                    String[] subAddresses = locationData.split(", ");
+                    subAddresses = locationData.split(", ");
                     Toast.makeText(getApplicationContext(),subAddresses[1],Toast.LENGTH_SHORT).show();
 //                            System.out.println(subAddresses[1]);
 

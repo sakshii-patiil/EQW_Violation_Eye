@@ -45,6 +45,7 @@ import java.util.Map;
 public class LoginScreen extends AppCompatActivity {
 
     Button login;
+    private DBHelper dbHelper;
     //Firebase ref = new Firebase(Config.FIREBASE_URL);
     FirebaseDatabase database = FirebaseDatabase.getInstance("https://eqw-violationeye-42382-default-rtdb.firebaseio.com/");
     static public String id;
@@ -63,12 +64,13 @@ public class LoginScreen extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login_screen);
         google = findViewById(R.id.google);
+        dbHelper = new DBHelper(LoginScreen.this);
 
 
         login = findViewById(R.id.loginButton);
         forgotPassword = findViewById(R.id.forgot_password);
-
         firebaseAuth = FirebaseAuth.getInstance();
+
         login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -183,7 +185,10 @@ public class LoginScreen extends AppCompatActivity {
                         //loginFlag = true;
                         addDataToFirebase();
 
-                        startActivity(new Intent(getApplicationContext(), IncidentReportScreen.class));
+                        Intent i = new Intent(LoginScreen.this, IncidentReportScreen.class);
+                        i.putExtra("id",id);
+                        startActivity(i);
+
                         finish();
                     }
 
@@ -196,8 +201,9 @@ public class LoginScreen extends AppCompatActivity {
                                     public void onComplete(@NonNull Task<AuthResult> task) {
                                         if (task.isSuccessful()) {
                                             addDataToFirebase();
-                                            Intent intent = new Intent(LoginScreen.this, IncidentReportScreen.class);
-                                            startActivity(intent);
+                                            Intent i = new Intent(LoginScreen.this, IncidentReportScreen.class);
+                                            i.putExtra("id",id);
+                                            startActivity(i);
                                             finish();
                                         } else {
                                             Toast.makeText(getApplicationContext(), "Authentication failed", Toast.LENGTH_SHORT).show();
@@ -216,6 +222,10 @@ public class LoginScreen extends AppCompatActivity {
     }
 
     private void addDataToFirebase() {
+        dbHelper.addNewCourse(id, email, 1);
+
+        // after adding the data we are displaying a toast message.
+        Toast.makeText(LoginScreen.this, "Data has been added.", Toast.LENGTH_SHORT).show();
         FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
         if (firebaseUser != null) {
             id = firebaseUser.getUid();
@@ -277,7 +287,9 @@ public class LoginScreen extends AppCompatActivity {
                                             //displayToast("Firebase authentication successful");
                                             loginFlag = true;
                                             addDataToFirebase();
-                                            startActivity(new Intent(getApplicationContext(), IncidentReportScreen.class));
+                                            Intent i = new Intent(LoginScreen.this, IncidentReportScreen.class);
+                                            i.putExtra("id",id);
+                                            startActivity(i);
                                             finish();
                                         } else {
                                             // When task is `unsuccessful` display Toast

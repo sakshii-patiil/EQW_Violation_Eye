@@ -27,6 +27,7 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationBarView;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -47,6 +48,7 @@ public class IncidentReportScreen extends AppCompatActivity {
     FloatingActionButton mic;
     private TextView tv_Speech_to_text;
     static boolean flag = false;
+    String id;
     ActivityIncidentReportScreenBinding binding;
     String loc;
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1001;
@@ -55,6 +57,8 @@ public class IncidentReportScreen extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        id = getIntent().getStringExtra("id");
 
         // Initializing other items
         // from layout file
@@ -202,9 +206,14 @@ public class IncidentReportScreen extends AppCompatActivity {
 
     private void addDataToFirebase() {
 
+//        DBHelper dbHelper = new DBHelper(IncidentReportScreen.this);
+//        String id = dbHelper.readData();
+
         // Initialize firebase user
+        FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+        FirebaseUser currentUser = firebaseAuth.getCurrentUser();
         FirebaseDatabase database = FirebaseDatabase.getInstance("https://eqw-violationeye-42382-default-rtdb.firebaseio.com/");
-        DatabaseReference myRef = database.getReference(LoginScreen.id);
+        DatabaseReference myRef = database.getReference(currentUser.getUid());
         myRef.child("pending").child(timestamp).setValue(false);
         myRef.child("pending").child(timestamp).child("Location").setValue(loc);
     }
