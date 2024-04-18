@@ -7,7 +7,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import androidx.annotation.NonNull;
@@ -25,8 +24,7 @@ public class pendingFragment extends Fragment {
     private View group_fregment_view;
     private ListView listView;
     static public String id;
-    private ArrayAdapter<String> arrayAdapter;
-    private ArrayList<String> arrayList;
+    private ArrayList<pending> arrayList;
 
     private DatabaseReference GroupRef;
 
@@ -61,16 +59,18 @@ public class pendingFragment extends Fragment {
 //                ArrayList list = new ArrayList();
                 arrayList.clear();
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()){
-                    arrayList.add(dataSnapshot.getKey());
+                    arrayList.add(new pending(dataSnapshot.getKey()));
                     Log.d("Elements in List : ", arrayList.toString());
                     System.err.println(dataSnapshot.getKey());
                 }
-                arrayAdapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1, arrayList);
+                pendingAdapter arrayAdapter = new pendingAdapter(getContext(), arrayList);
                 listView.setAdapter(arrayAdapter);
                 listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                        String selectedItem = (String) parent.getItemAtPosition(position);
+                        pending p = arrayList.get(position);
+//                        Toast.makeText(getActivity(),p.getTimestamp(),Toast.LENGTH_SHORT).show();
+                        String selectedItem = p.getTimestamp();
                         Intent i = new Intent(getContext(),postScreen.class);
                         i.putExtra("date",selectedItem);
                         startActivity(i);

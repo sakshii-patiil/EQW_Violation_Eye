@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.speech.RecognizerIntent;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -32,6 +33,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -43,7 +45,7 @@ import java.util.Objects;
 public class IncidentReportScreen extends AppCompatActivity {
 
 
-    static String timestamp;
+     String timestamp;
     private static final int REQUEST_CODE_SPEECH_INPUT = 1;
     FloatingActionButton mic;
     private TextView tv_Speech_to_text;
@@ -53,6 +55,9 @@ public class IncidentReportScreen extends AppCompatActivity {
     String loc;
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1001;
     private FusedLocationProviderClient fusedLocationClient;
+    private String day,fullDate,time;
+    private String date;
+
     @SuppressLint("NonConstantResourceId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,6 +73,15 @@ public class IncidentReportScreen extends AppCompatActivity {
         binding = ActivityIncidentReportScreenBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         mic = findViewById(R.id.button);
+        LinearLayout signout = findViewById(R.id.signout);
+        signout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FirebaseAuth.getInstance().signOut();
+                startActivity(new Intent(getApplicationContext(),LoginScreen.class));
+                finish();
+            }
+        });
 
         replaceFragment(new pendingFragment());
         binding.bottomNavigationView.setBackground(null);
@@ -95,13 +109,7 @@ public class IncidentReportScreen extends AppCompatActivity {
                 intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE,
                         Locale.getDefault());
                 intent.putExtra(RecognizerIntent.EXTRA_PROMPT, "Speak to text");
-
-                try {
-                    startActivityForResult(intent, REQUEST_CODE_SPEECH_INPUT);
-                    FirebaseAuth.getInstance().signOut();
-                } catch (Exception e) {
-
-                }
+                startActivityForResult(intent, REQUEST_CODE_SPEECH_INPUT);
             }
         });
     }
@@ -121,9 +129,19 @@ public class IncidentReportScreen extends AppCompatActivity {
                         RecognizerIntent.EXTRA_RESULTS);
                 if (Objects.requireNonNull(result).get(0).equals("violation")) {
                     Date currentTime = Calendar.getInstance().getTime();
+                    SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+                     date = dateFormat.format(currentTime);
+//                    Toast.makeText(getApplicationContext(),date,Toast.LENGTH_SHORT).show();
+
+
                     //Toast.makeText(getApplicationContext(),Objects.requireNonNull(result).get(0),Toast.LENGTH_SHORT).show();
                     timestamp = currentTime.toString();
                     timestamp = timestamp.substring(0, timestamp.indexOf("G"));
+
+//                    fullDate = date.substring(0,date.indexOf(" "));
+//                    time = date.substring(date.indexOf(' ')+1);
+//                     timestamp = fullDate + " "+time;
+
 
                     fetchLocation();
                     //Toast.makeText(getApplicationContext(), timestamp, Toast.LENGTH_SHORT).show();
@@ -212,9 +230,15 @@ public class IncidentReportScreen extends AppCompatActivity {
         // Initialize firebase user
         FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
         FirebaseUser currentUser = firebaseAuth.getCurrentUser();
-        FirebaseDatabase database = FirebaseDatabase.getInstance("https://eqw-violationeye-42382-default-rtdb.firebaseio.com/");
-        DatabaseReference myRef = database.getReference(currentUser.getUid());
-        myRef.child("pending").child(timestamp).setValue(false);
-        myRef.child("pending").child(timestamp).child("Location").setValue(loc);
+        if(currentUser != null){
+
+            Toast.makeText(getApplicationContext(), "User id is : "+ currentUser.getUid(), Toast.LENGTH_SHORT).show();
+            FirebaseDatabase database = FirebaseDatabase.getInstance("https://eqw-violationeye-42382-default-rtdb.firebaseio.com/");
+            DatabaseReference myRef = database.getReference(currentUser.getUid());
+            myRef.child("pending").child(timestamp).setValue(false);
+            myRef.child("pending").child(timestamp).child("Location").setValue(loc);
+        }else{
+
+        }
     }
 }

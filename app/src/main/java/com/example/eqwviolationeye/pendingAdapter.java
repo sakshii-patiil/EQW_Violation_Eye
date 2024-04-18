@@ -1,47 +1,46 @@
 package com.example.eqwviolationeye;
 
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
+import androidx.annotation.Nullable;
 
-import com.firebase.ui.database.FirebaseRecyclerAdapter;
-import com.firebase.ui.database.FirebaseRecyclerOptions;
+import java.util.ArrayList;
 
-public class pendingAdapter extends FirebaseRecyclerAdapter<pending,pendingAdapter.myviewholder>
-{
+public class pendingAdapter extends ArrayAdapter<pending> {
 
-    public pendingAdapter(@NonNull FirebaseRecyclerOptions<pending> options) {
-        super(options);
+    // invoke the suitable constructor of the ArrayAdapter class
+    public pendingAdapter(@NonNull Context context, ArrayList<pending> arrayList) {
+
+        // pass the context and arrayList for the super
+        // constructor of the ArrayAdapter class
+        super(context, 0, arrayList);
     }
-
-
-    @Override
-    protected void onBindViewHolder(@NonNull myviewholder holder, int position, @NonNull pending model) {
-        holder.timestamp.setText(model.gettimestamp());
-    }
-
 
     @NonNull
     @Override
-    public myviewholder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view= LayoutInflater.from(parent.getContext()).inflate(R.layout.pending_item,parent,false);
-        return new myviewholder(view);
-    }
+    public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
 
-    public class myviewholder extends RecyclerView.ViewHolder
-    {
-        TextView timestamp;
+        // convertView which is recyclable view
+        View currentItemView = convertView;
 
-        public myviewholder(@NonNull View itemView) {
-            super(itemView);
-
-            timestamp=itemView.findViewById(R.id.timestamp);
+        // of the recyclable view is null then inflate the custom layout for the same
+        if (currentItemView == null) {
+            currentItemView = LayoutInflater.from(getContext()).inflate(R.layout.pending_item, parent, false);
         }
+
+        // get the position of the view from the ArrayAdapter
+        pending currentNumberPosition = getItem(position);
+        // then according to the position of the view assign the desired image for the same
+        TextView timestamp = currentItemView.findViewById(R.id.timestamp);
+        timestamp.setText(currentNumberPosition.getTimestamp());
+        // then according to the position of the view assign the desired TextView 1 for the same
+        // then return the recyclable view
+        return currentItemView;
     }
-
 }
-

@@ -9,7 +9,10 @@
     tools:context=".pendingFragment">
         <!--RecyclerView-->
         <ListView
+            android:layout_margin="40dp"
             android:id="@+id/pendingList"
+            android:dividerHeight="20.0dp"
+            android:divider="@color/white"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
 

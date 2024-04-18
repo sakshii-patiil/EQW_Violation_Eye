@@ -227,8 +227,11 @@ public class LoginScreen extends AppCompatActivity {
         // after adding the data we are displaying a toast message.
         Toast.makeText(LoginScreen.this, "Data has been added.", Toast.LENGTH_SHORT).show();
         FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
+
         if (firebaseUser != null) {
             id = firebaseUser.getUid();
+            Toast.makeText(getApplicationContext(), String.valueOf(id), Toast.LENGTH_SHORT).show();
+
             DatabaseReference myRef = database.getReference(id);
 
             myRef.addListenerForSingleValueEvent(new ValueEventListener() {

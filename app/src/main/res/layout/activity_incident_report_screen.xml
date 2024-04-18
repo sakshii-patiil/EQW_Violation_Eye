@@ -5,13 +5,56 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/my_primary"
+    android:background="@color/white"
     tools:context=".IncidentReportScreen">
+
+    <Toolbar
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:background="@color/my_primary">
+
+        <ImageView
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:layout_marginRight="12dp"
+            android:src="@drawable/logo"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Reports"
+            android:fontFamily="sans-serif-medium"
+            android:textSize="20dp"
+            android:textColor="@color/white"/>
+        <LinearLayout
+            android:id="@+id/signout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Sign out"
+                android:layout_marginRight="20dp"
+                android:fontFamily="sans-serif-medium"
+                android:textSize="17dp"
+                android:textColor="@color/white"/>
+        </LinearLayout>
+
+    </Toolbar>
 
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/frame_layout"/>
+        android:id="@+id/frame_layout"
+        android:layout_marginTop="60dp"
+        android:padding="5dp">
+
+
+    </FrameLayout>
+
 
     <com.google.android.material.bottomappbar.BottomAppBar
         android:layout_width="match_parent"
@@ -35,6 +78,7 @@
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:layout_width="wrap_content"
+        android:contentDescription="Enter How Much Cookies You Want"
         android:id="@+id/button"
         android:layout_height="wrap_content"
         android:backgroundTint="@color/white"
