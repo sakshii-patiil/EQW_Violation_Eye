@@ -8,6 +8,7 @@ import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -63,8 +64,13 @@ public class IncidentReportScreen extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        id = getIntent().getStringExtra("id");
+        FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
 
+
+        FirebaseUser currentUser = firebaseAuth.getCurrentUser();
+
+        id = currentUser.getEmail();
+        id = id.substring(0, id.length()-10);
         // Initializing other items
         // from layout file
 
@@ -129,8 +135,8 @@ public class IncidentReportScreen extends AppCompatActivity {
                         RecognizerIntent.EXTRA_RESULTS);
                 if (Objects.requireNonNull(result).get(0).equals("violation")) {
                     Date currentTime = Calendar.getInstance().getTime();
-                    SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-                     date = dateFormat.format(currentTime);
+                    //SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+                    // date = dateFormat.format(currentTime);
 //                    Toast.makeText(getApplicationContext(),date,Toast.LENGTH_SHORT).show();
 
 
@@ -138,6 +144,50 @@ public class IncidentReportScreen extends AppCompatActivity {
                     timestamp = currentTime.toString();
                     timestamp = timestamp.substring(0, timestamp.indexOf("G"));
 
+                    Calendar calendar = Calendar.getInstance();
+
+                    // Get day of the week (Sunday = 1, Monday = 2, ..., Saturday = 7)
+                    int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
+                    switch(dayOfWeek)
+                    {
+                        case 1: day = "Sunday";
+                        break;
+
+                        case 2: day = "Monday";
+                            break;
+
+                        case 3: day = "Tuesday";
+                            break;
+
+                        case 4: day = "Wednesday";
+                            break;
+
+                        case 5: day = "Thursday";
+                            break;
+
+                        case 6: day = "Friday";
+                            break;
+
+                        case 7: day = "Saturday";
+                            break;
+                    }
+
+                    // Get date (day of the month)
+                    int dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
+
+                    // Get month (0 = January, 1 = February, ..., 11 = December)
+                    int month = calendar.get(Calendar.MONTH) + 1; // Adding 1 to adjust for zero-based indexing
+
+                    // Get year
+                    int year = calendar.get(Calendar.YEAR);
+
+                    fullDate = dayOfMonth +"-"+month+"-"+year;
+
+                    // Get current time
+                    SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm:ss");
+                    time = timeFormat.format(calendar.getTime());
+
+                    // Display the results
 //                    fullDate = date.substring(0,date.indexOf(" "));
 //                    time = date.substring(date.indexOf(' ')+1);
 //                     timestamp = fullDate + " "+time;
@@ -230,15 +280,14 @@ public class IncidentReportScreen extends AppCompatActivity {
         // Initialize firebase user
         FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
         FirebaseUser currentUser = firebaseAuth.getCurrentUser();
+
         if(currentUser != null){
-
-            Toast.makeText(getApplicationContext(), "User id is : "+ currentUser.getUid(), Toast.LENGTH_SHORT).show();
             FirebaseDatabase database = FirebaseDatabase.getInstance("https://eqw-violationeye-42382-default-rtdb.firebaseio.com/");
-            DatabaseReference myRef = database.getReference(currentUser.getUid());
-            myRef.child("pending").child(timestamp).setValue(false);
-            myRef.child("pending").child(timestamp).child("Location").setValue(loc);
+            DatabaseReference myRef = database.getReference(id);
+            myRef.child("pending").child(fullDate+","+time).setValue(false);
+            myRef.child("pending").child(fullDate+","+time).child("Location").setValue(loc);
         }else{
-
+            Toast.makeText(getApplicationContext(), "User is not created", Toast.LENGTH_SHORT).show();
         }
     }
 }

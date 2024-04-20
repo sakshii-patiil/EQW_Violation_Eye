@@ -8,10 +8,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -38,7 +41,12 @@ public class pendingFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         group_fregment_view = inflater.inflate(R.layout.fragment_pending, container, false);
-        id = getActivity().getIntent().getStringExtra("id");
+        FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+
+        FirebaseUser currentUser = firebaseAuth.getCurrentUser();
+
+        String id = currentUser.getEmail();
+        id = id.substring(0,id.length()-10);
         GroupRef = FirebaseDatabase.getInstance("https://eqw-violationeye-42382-default-rtdb.firebaseio.com/").getReference(id).child("pending");
 
 
@@ -69,8 +77,9 @@ public class pendingFragment extends Fragment {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                         pending p = arrayList.get(position);
-//                        Toast.makeText(getActivity(),p.getTimestamp(),Toast.LENGTH_SHORT).show();
-                        String selectedItem = p.getTimestamp();
+//
+                        String selectedItem = p.getDate()+","+p.getTime();
+                        Toast.makeText(getActivity(),selectedItem,Toast.LENGTH_SHORT).show();
                         Intent i = new Intent(getContext(),postScreen.class);
                         i.putExtra("date",selectedItem);
                         startActivity(i);

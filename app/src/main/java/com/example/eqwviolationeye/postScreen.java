@@ -15,6 +15,8 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -114,7 +116,13 @@ public class postScreen extends AppCompatActivity {
 
     void fetchFromDatabse()
     {
-        mDatabase = FirebaseDatabase.getInstance("https://eqw-violationeye-42382-default-rtdb.firebaseio.com/").getReference(pendingFragment.id).child("pending").child(date);
+        FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+        FirebaseUser currentUser = firebaseAuth.getCurrentUser();
+        String id = currentUser.getEmail();
+        id = id.substring(0,id.length()-10);
+        date = date.trim();
+        Toast.makeText(getApplicationContext(),id,Toast.LENGTH_SHORT).show();
+        mDatabase = FirebaseDatabase.getInstance("https://eqw-violationeye-42382-default-rtdb.firebaseio.com/").getReference(id).child("pending").child(date);
 
 
         // Path to the child node you want to retrieve
@@ -123,13 +131,15 @@ public class postScreen extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 locationData = snapshot.getValue(String.class);
-                //Toast.makeText(getApplicationContext(),childData,Toast.LENGTH_SHORT).show();
+
                 if (locationData != null) {
                     // Do something with the retrieved data
                     subAddresses = locationData.split(", ");
                     Toast.makeText(getApplicationContext(),subAddresses[1],Toast.LENGTH_SHORT).show();
+                    enableUIElements();
 //                            System.out.println(subAddresses[1]);
-
+                }else{
+                    Toast.makeText(getApplicationContext(),"Location Not Found",Toast.LENGTH_SHORT).show();
                 }
             }
 
@@ -138,6 +148,15 @@ public class postScreen extends AppCompatActivity {
 
             }
         });
+    }
+
+    void enableUIElements() {
+        // Enable UI elements here
+        locationCard.setEnabled(true);
+        submitCard.setEnabled(true);
+        // You can also update UI elements with the fetched data if needed
+        // For example:
+        location.setText(locationData);
     }
 
 }

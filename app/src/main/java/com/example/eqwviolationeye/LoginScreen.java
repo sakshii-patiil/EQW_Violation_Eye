@@ -222,14 +222,15 @@ public class LoginScreen extends AppCompatActivity {
     }
 
     private void addDataToFirebase() {
-        dbHelper.addNewCourse(id, email, 1);
+//        dbHelper.addNewCourse(id, email, 1);
 
         // after adding the data we are displaying a toast message.
-        Toast.makeText(LoginScreen.this, "Data has been added.", Toast.LENGTH_SHORT).show();
+        //Toast.makeText(LoginScreen.this, "Data has been added.", Toast.LENGTH_SHORT).show();
         FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
 
         if (firebaseUser != null) {
-            id = firebaseUser.getUid();
+            id = firebaseUser.getEmail();
+            id = id.substring(0,id.length()-10);
             Toast.makeText(getApplicationContext(), String.valueOf(id), Toast.LENGTH_SHORT).show();
 
             DatabaseReference myRef = database.getReference(id);
@@ -312,7 +313,7 @@ public class LoginScreen extends AppCompatActivity {
                                             username = firebaseUser.getDisplayName();
                                             email = firebaseUser.getEmail();
                                             phoneNumber = "";
-                                            id = firebaseUser.getUid();
+                                            id = firebaseUser.getEmail();
                                             addDataToFirebase();
                                             //saveUserInformation();
                                         }

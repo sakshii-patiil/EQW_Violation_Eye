@@ -33,12 +33,17 @@ public class pendingAdapter extends ArrayAdapter<pending> {
         if (currentItemView == null) {
             currentItemView = LayoutInflater.from(getContext()).inflate(R.layout.pending_item, parent, false);
         }
+        else {
+            currentItemView = LayoutInflater.from(getContext()).inflate(R.layout.pending_item, parent, false);
+        }
 
         // get the position of the view from the ArrayAdapter
         pending currentNumberPosition = getItem(position);
         // then according to the position of the view assign the desired image for the same
-        TextView timestamp = currentItemView.findViewById(R.id.timestamp);
-        timestamp.setText(currentNumberPosition.getTimestamp());
+        TextView fullDate = currentItemView.findViewById(R.id.fullDate);
+        TextView time = currentItemView.findViewById(R.id.time);
+        fullDate.setText(currentNumberPosition.getDate());
+        time.setText(currentNumberPosition.getTime());
         // then according to the position of the view assign the desired TextView 1 for the same
         // then return the recyclable view
         return currentItemView;

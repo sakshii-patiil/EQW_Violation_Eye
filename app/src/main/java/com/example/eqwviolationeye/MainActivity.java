@@ -37,9 +37,7 @@ public class MainActivity extends AppCompatActivity {
         if (currentUser != null) {
             // User is signed in, navigate to main screen or perform necessary actions
             // Example: startActivity(new Intent(MainActivity.this, HomeActivity.class));
-            data = currentUser.getUid();
             Intent i = new Intent(MainActivity.this, IncidentReportScreen.class);
-            i.putExtra("id",data);
             startActivity(i);
             finish();
         } else {
