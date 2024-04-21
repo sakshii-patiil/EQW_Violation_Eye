@@ -273,10 +273,6 @@ public class IncidentReportScreen extends AppCompatActivity {
 
 
     private void addDataToFirebase() {
-
-//        DBHelper dbHelper = new DBHelper(IncidentReportScreen.this);
-//        String id = dbHelper.readData();
-
         // Initialize firebase user
         FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
         FirebaseUser currentUser = firebaseAuth.getCurrentUser();
@@ -284,7 +280,9 @@ public class IncidentReportScreen extends AppCompatActivity {
         if(currentUser != null){
             FirebaseDatabase database = FirebaseDatabase.getInstance("https://eqw-violationeye-42382-default-rtdb.firebaseio.com/");
             DatabaseReference myRef = database.getReference(id);
-            myRef.child("pending").child(fullDate+","+time).setValue(false);
+            myRef.child("pending").child(fullDate+","+time);
+            myRef.child("pending").child(fullDate+","+time).child("status").setValue("true");
+
             myRef.child("pending").child(fullDate+","+time).child("Location").setValue(loc);
         }else{
             Toast.makeText(getApplicationContext(), "User is not created", Toast.LENGTH_SHORT).show();

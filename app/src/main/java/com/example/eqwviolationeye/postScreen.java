@@ -30,7 +30,7 @@ public class postScreen extends AppCompatActivity {
     private DatabaseReference mDatabase;
     String date;
     String locationData;
-
+    String id="";
 
     CardView dayDateTimeCard,locationCard,submitCard,uploadCard;
     String[] subAddresses;
@@ -50,6 +50,14 @@ public class postScreen extends AppCompatActivity {
         locationLayout = findViewById(R.id.locationLayout);
 
         date = getIntent().getStringExtra("date");
+
+        FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+        FirebaseUser currentUser = firebaseAuth.getCurrentUser();
+        id = currentUser.getEmail();
+        id = id.substring(0,id.length()-10);
+
+
+        mDatabase = FirebaseDatabase.getInstance("https://eqw-violationeye-42382-default-rtdb.firebaseio.com/").getReference(id).child("pending").child(date);
 
         fetchFromDatabse();
 
@@ -83,6 +91,8 @@ public class postScreen extends AppCompatActivity {
 
                 // Start the activity to pick an image
                 startActivityForResult(pickImageIntent, PICK_IMAGE_REQUEST_CODE);
+
+                mDatabase.setValue(false);
             }
         });
 
@@ -110,19 +120,16 @@ public class postScreen extends AppCompatActivity {
 
                 // Start the activity to share the data
                 startActivity(Intent.createChooser(shareIntent, "Share via"));
+
+
             }
         }
     }
 
     void fetchFromDatabse()
     {
-        FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
-        FirebaseUser currentUser = firebaseAuth.getCurrentUser();
-        String id = currentUser.getEmail();
-        id = id.substring(0,id.length()-10);
         date = date.trim();
         Toast.makeText(getApplicationContext(),id,Toast.LENGTH_SHORT).show();
-        mDatabase = FirebaseDatabase.getInstance("https://eqw-violationeye-42382-default-rtdb.firebaseio.com/").getReference(id).child("pending").child(date);
 
 
         // Path to the child node you want to retrieve
@@ -136,8 +143,6 @@ public class postScreen extends AppCompatActivity {
                     // Do something with the retrieved data
                     subAddresses = locationData.split(", ");
                     Toast.makeText(getApplicationContext(),subAddresses[1],Toast.LENGTH_SHORT).show();
-                    enableUIElements();
-//                            System.out.println(subAddresses[1]);
                 }else{
                     Toast.makeText(getApplicationContext(),"Location Not Found",Toast.LENGTH_SHORT).show();
                 }
@@ -148,15 +153,6 @@ public class postScreen extends AppCompatActivity {
 
             }
         });
-    }
-
-    void enableUIElements() {
-        // Enable UI elements here
-        locationCard.setEnabled(true);
-        submitCard.setEnabled(true);
-        // You can also update UI elements with the fetched data if needed
-        // For example:
-        location.setText(locationData);
     }
 
 }
