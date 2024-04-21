@@ -22,6 +22,10 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+
+import java.util.UUID;
 
 
 public class postScreen extends AppCompatActivity {
@@ -92,7 +96,7 @@ public class postScreen extends AppCompatActivity {
                 // Start the activity to pick an image
                 startActivityForResult(pickImageIntent, PICK_IMAGE_REQUEST_CODE);
 
-                mDatabase.setValue(false);
+                mDatabase.child("status").setValue("false");
             }
         });
 
@@ -111,6 +115,7 @@ public class postScreen extends AppCompatActivity {
 
                 String message = "The above vehicle {number plate} is seen violating the traffic rules. I request @"+subAddresses[1]+"CityPolice to take necessary actions asap. It is causing unnecessary chaos in "+subAddresses[0]+" area";
 
+                uploadImageToFirebaseStorage(imageUri);
                 // Create a new Intent
                 Intent shareIntent = new Intent();
                 shareIntent.setAction(Intent.ACTION_SEND);
@@ -132,7 +137,6 @@ public class postScreen extends AppCompatActivity {
         Toast.makeText(getApplicationContext(),id,Toast.LENGTH_SHORT).show();
 
 
-        // Path to the child node you want to retrieve
         DatabaseReference childRef = mDatabase.child("Location");
         childRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -153,6 +157,33 @@ public class postScreen extends AppCompatActivity {
 
             }
         });
+    }
+
+    private void uploadImageToFirebaseStorage(Uri imageUri) {
+        StorageReference storageRef = FirebaseStorage.getInstance().getReference();
+        StorageReference imageRef = storageRef.child("images/" + UUID.randomUUID().toString());
+
+        imageRef.putFile(imageUri)
+                .addOnSuccessListener(taskSnapshot -> {
+                    imageRef.getDownloadUrl().addOnSuccessListener(uri -> {
+                        String imageUrl = uri.toString();
+                        updateFirebaseDatabase(imageUrl);
+                    });
+                })
+                .addOnFailureListener(e -> {
+                    // Handle errors
+                });
+    }
+
+
+    private void updateFirebaseDatabase(String imageUrl) {
+        mDatabase.child("image_url").setValue(imageUrl)
+                .addOnSuccessListener(aVoid -> {
+
+                })
+                .addOnFailureListener(e -> {
+
+                });
     }
 
 }
