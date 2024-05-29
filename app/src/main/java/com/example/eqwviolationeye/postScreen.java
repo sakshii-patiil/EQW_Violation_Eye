@@ -41,10 +41,10 @@ public class postScreen extends AppCompatActivity {
     String id="";
 
     TextView dayDateTime,location;
-    LinearLayout dayDateTimeLayout,locationLayout,uploadLayout;
+    LinearLayout dayDateTimeLayout,locationLayout,uploadLayout,details;
     FrameLayout processedFrame,detailsFrame,postFrame;
     private DatabaseReference mDatabase;
-    String date;
+    String date,detailsDate;
     String locationData;
 
 
@@ -69,6 +69,7 @@ public class postScreen extends AppCompatActivity {
         postFrame=findViewById(R.id.postFrame);
         processedFrame=findViewById(R.id.processedFrame);
         detailsFrame=findViewById(R.id.detailsFrame);
+        details = findViewById(R.id.details);
 //        dayDateTimeLayout=findViewById(R.id.dayDateTiemLayout);
 //        dayDateTimeCard = findViewById(R.id.dayDateTiemCard);
 //        locationCard = findViewById(R.id.locationCard);
@@ -77,6 +78,7 @@ public class postScreen extends AppCompatActivity {
 //        locationLayout = findViewById(R.id.locationLayout);
 
         date = getIntent().getStringExtra("date");
+        detailsDate = date;
 
         Toast.makeText(getApplicationContext(), date,Toast.LENGTH_SHORT).show();
         FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
@@ -106,6 +108,16 @@ public class postScreen extends AppCompatActivity {
                 } catch (ActivityNotFoundException e) {
                     // Chrome is probably not installed
                 }
+            }
+        });
+
+        details.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(getApplicationContext(), details_layout.class);
+                i.putExtra("date", detailsDate);
+                Toast.makeText(getApplicationContext(),detailsDate,Toast.LENGTH_LONG).show();
+                startActivity(i);
             }
         });
 
