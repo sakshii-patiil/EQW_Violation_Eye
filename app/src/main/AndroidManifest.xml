@@ -26,9 +26,6 @@
             android:name=".details_layout"
             android:exported="false" />
         <activity
-            android:name=".post_layout"
-            android:exported="false" />
-        <activity
             android:name=".postScreen"
             android:exported="false"
             android:screenOrientation="portrait" />
