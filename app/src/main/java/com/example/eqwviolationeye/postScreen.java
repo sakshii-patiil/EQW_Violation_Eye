@@ -1,11 +1,15 @@
 package com.example.eqwviolationeye;
 
+import android.annotation.SuppressLint;
+import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.transition.AutoTransition;
 import android.transition.TransitionManager;
+import android.util.Log;
 import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -29,76 +33,127 @@ import java.util.UUID;
 
 
 public class postScreen extends AppCompatActivity {
+//    TextView dayDateTime,location;
+//    LinearLayout dayDateTimeLayout,locationLayout,uploadLayout;
+//    private DatabaseReference mDatabase;
+//    String date;
+//    String locationData;
+    String id="";
+
     TextView dayDateTime,location;
     LinearLayout dayDateTimeLayout,locationLayout,uploadLayout;
+    FrameLayout processedFrame,detailsFrame,postFrame;
     private DatabaseReference mDatabase;
     String date;
     String locationData;
-    String id="";
 
-    CardView dayDateTimeCard,locationCard,submitCard,uploadCard;
+
+    LinearLayout submitCard,upload;
     String[] subAddresses;
     private static final int PICK_IMAGE_REQUEST_CODE = 1;
+    private String statusData;
+
+    //    CardView dayDateTimeCard,locationCard,submitCard,uploadCard;
+//    String[] subAddresses;
+//    private static final int PICK_IMAGE_REQUEST_CODE = 1;
+    @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_post_screen);
 
+
         dayDateTime = findViewById(R.id.dayDateTime);
         location = findViewById(R.id.location);
-        dayDateTimeLayout=findViewById(R.id.dayDateTiemLayout);
-        dayDateTimeCard = findViewById(R.id.dayDateTiemCard);
-        locationCard = findViewById(R.id.locationCard);
-        uploadCard = findViewById(R.id.uploadCard);
-        submitCard = findViewById(R.id.submitCard);
-        locationLayout = findViewById(R.id.locationLayout);
+        upload = findViewById(R.id.upload);
+        postFrame=findViewById(R.id.postFrame);
+        processedFrame=findViewById(R.id.processedFrame);
+        detailsFrame=findViewById(R.id.detailsFrame);
+//        dayDateTimeLayout=findViewById(R.id.dayDateTiemLayout);
+//        dayDateTimeCard = findViewById(R.id.dayDateTiemCard);
+//        locationCard = findViewById(R.id.locationCard);
+//        uploadCard = findViewById(R.id.uploadCard);
+//        submitCard = findViewById(R.id.submit);
+//        locationLayout = findViewById(R.id.locationLayout);
 
         date = getIntent().getStringExtra("date");
 
+        Toast.makeText(getApplicationContext(), date,Toast.LENGTH_SHORT).show();
         FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
         FirebaseUser currentUser = firebaseAuth.getCurrentUser();
         id = currentUser.getEmail();
         id = id.substring(0,id.length()-10);
 
-
+//        Toast.makeText(getApplicationContext(), id + date,Toast.LENGTH_SHORT).show();
         mDatabase = FirebaseDatabase.getInstance("https://eqw-violationeye-42382-default-rtdb.firebaseio.com/").getReference(id).child("pending").child(date);
 
         fetchFromDatabse();
 
-        dayDateTimeCard.setOnClickListener(new View.OnClickListener() {
+
+        dayDateTime.setText(date);
+
+
+
+        upload.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                int visibility = (dayDateTime.getVisibility() == View.GONE)? View.VISIBLE:View.GONE;
-                TransitionManager.beginDelayedTransition(dayDateTimeLayout,new AutoTransition());
-                dayDateTime.setVisibility(visibility);
-                dayDateTime.setText(date);
+                String url = "http://127.0.0.1:5000";
+                try {
+                    Uri uri = Uri.parse("googlechrome://navigate?url=" + url);
+                    Intent i = new Intent(Intent.ACTION_VIEW, uri);
+                    i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    startActivity(i);
+                } catch (ActivityNotFoundException e) {
+                    // Chrome is probably not installed
+                }
             }
         });
 
-        locationCard.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                int visibility = (location.getVisibility() == View.GONE)? View.VISIBLE:View.GONE;
-                TransitionManager.beginDelayedTransition(locationLayout,new AutoTransition());
+//        dayDateTime = findViewById(R.id.dayDateTime);
+//        location = findViewById(R.id.location);
+//        dayDateTimeLayout=findViewById(R.id.dayDateTiemLayout);
+//        dayDateTimeCard = findViewById(R.id.dayDateTiemCard);
+//        locationCard = findViewById(R.id.locationCard);
+//        uploadCard = findViewById(R.id.uploadCard);
+//        submitCard = findViewById(R.id.submitCard);
+//        locationLayout = findViewById(R.id.locationLayout);
 
-                location.setVisibility(visibility);
-                location.setText(locationData);
+//        date = getIntent().getStringExtra("date");
 
-            }
-        });
-
-        submitCard.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent pickImageIntent = new Intent(Intent.ACTION_PICK);
-                pickImageIntent.setType("image/*");
-
-                // Start the activity to pick an image
-                startActivityForResult(pickImageIntent, PICK_IMAGE_REQUEST_CODE);
-
-                mDatabase.child("status").setValue("false");
-            }
-        });
+//        dayDateTimeCard.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                int visibility = (dayDateTime.getVisibility() == View.GONE)? View.VISIBLE:View.GONE;
+//                TransitionManager.beginDelayedTransition(dayDateTimeLayout,new AutoTransition());
+//                dayDateTime.setVisibility(visibility);
+//                dayDateTime.setText(date);
+//            }
+//        });
+//
+//        locationCard.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                int visibility = (location.getVisibility() == View.GONE)? View.VISIBLE:View.GONE;
+//                TransitionManager.beginDelayedTransition(locationLayout,new AutoTransition());
+//
+//                location.setVisibility(visibility);
+//                location.setText(locationData);
+//
+//            }
+//        });
+//
+//        submitCard.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                Intent pickImageIntent = new Intent(Intent.ACTION_PICK);
+//                pickImageIntent.setType("image/*");
+//
+//                // Start the activity to pick an image
+//                startActivityForResult(pickImageIntent, PICK_IMAGE_REQUEST_CODE);
+//
+//                mDatabase.child("status").setValue("false");
+//            }
+//        });
 
 
     }
@@ -138,6 +193,7 @@ public class postScreen extends AppCompatActivity {
 
 
         DatabaseReference childRef = mDatabase.child("Location");
+        DatabaseReference childRefStatus = mDatabase.child("status");
         childRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -146,9 +202,29 @@ public class postScreen extends AppCompatActivity {
                 if (locationData != null) {
                     // Do something with the retrieved data
                     subAddresses = locationData.split(", ");
-                    Toast.makeText(getApplicationContext(),subAddresses[1],Toast.LENGTH_SHORT).show();
+                    location.setText(subAddresses[0]+", "+subAddresses[1]);
+//                    Toast.makeText(getApplicationContext(),subAddresses[1],Toast.LENGTH_SHORT).show();
                 }else{
                     Toast.makeText(getApplicationContext(),"Location Not Found",Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+        childRefStatus.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                statusData = snapshot.getValue(String.class);
+
+                if(statusData.equals("false"))
+                {
+                    postFrame.setVisibility(View.VISIBLE);
+                    detailsFrame.setVisibility(View.VISIBLE);
+                    processedFrame.setVisibility(View.VISIBLE);
                 }
             }
 

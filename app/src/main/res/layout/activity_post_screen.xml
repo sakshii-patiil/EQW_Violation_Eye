@@ -1,162 +1,238 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".postScreen"
-    android:background="@color/my_primary"
     android:orientation="vertical">
 
+    <Toolbar
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:id="@+id/toolbar"
+        android:background="@color/my_primary">
+
+        <ImageView
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:layout_marginRight="12dp"
+            android:src="@drawable/logo"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Genrate Report"
+            android:fontFamily="sans-serif-medium"
+            android:textSize="20dp"
+            android:textColor="@color/white"/>
+
+    </Toolbar>
+
     <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="143dp"
+        android:layout_marginLeft="30dp"
+        android:layout_marginTop="30dp"
+        android:layout_marginRight="30dp"
+        android:layout_marginBottom="10dp"
+        android:background="@drawable/background_title"
+        android:gravity="center"
         android:orientation="vertical"
-        android:background="@drawable/shape"
-        app:cardCornerRadius="20sp"
-        android:layout_centerInParent="true"
-        android:padding="35dp">
+        android:padding="20dp">
 
-
-    <androidx.cardview.widget.CardView
-        android:id="@+id/dayDateTiemCard"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/my_primary"
-        app:cardCornerRadius="20dp"
-        app:cardElevation="10dp"
-        app:contentPadding="20dp"
-        android:layout_margin="20dp">
-
-        <LinearLayout
-            android:id="@+id/dayDateTiemLayout"
+        <TextView
+            android:id="@+id/dayDateTime"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:layout_gravity="center"
+            android:text="Time"
+            android:textColor="@color/black"
+            android:textSize="20dp"
+            android:textStyle="bold" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Day , Date and Time"
-                android:textColor="@color/my_primary"
-                android:textStyle="bold"
-                android:textSize="20sp"/>
-
-            <TextView
-                android:id="@+id/dayDateTime"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="date"
-                android:textColor="@color/my_primary"
-                android:textSize="18sp"
-                android:visibility="gone"/>
-
-
-        </LinearLayout>
-
-    </androidx.cardview.widget.CardView>
-
-    <androidx.cardview.widget.CardView
-        android:id="@+id/locationCard"
-        android:layout_width="match_parent"
-        android:background="@color/my_primary"
-        android:layout_height="wrap_content"
-        app:cardCornerRadius="20dp"
-        app:cardElevation="10dp"
-        app:contentPadding="20dp"
-        android:layout_margin="20dp">
-
-        <LinearLayout
-            android:id="@+id/locationLayout"
+        <TextView
+            android:id="@+id/location"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:layout_gravity="center"
+            android:text="Location"
+            android:textColor="@color/black"
+            android:textSize="20dp"
+            android:textStyle="bold" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Location"
-                android:textColor="@color/my_primary"
-                android:textStyle="bold"
-                android:textSize="20sp"/>
+    </LinearLayout>
 
-            <TextView
-                android:id="@+id/location"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="date"
-                android:textColor="@color/my_primary"
-                android:textSize="18sp"
-                android:visibility="gone"/>
-
-
-        </LinearLayout>
-
-    </androidx.cardview.widget.CardView>
-
-    <androidx.cardview.widget.CardView
-        android:id="@+id/uploadCard"
-        android:background="@color/my_primary"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:cardCornerRadius="20dp"
-        app:cardElevation="10dp"
-        app:contentPadding="20dp"
-        android:layout_margin="20dp">
+        android:layout_height="462dp"
+        android:gravity="center"
+        android:orientation="vertical">
 
         <LinearLayout
-            android:id="@+id/uploadLayout"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Upload proof"
-                android:textColor="@color/my_primary"
-                android:textStyle="bold"
-                android:textSize="20sp"/>
-
-            <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:id="@+id/proof"
-                android:visibility="gone"/>
-
-        </LinearLayout>
-
-    </androidx.cardview.widget.CardView>
-
-        <androidx.cardview.widget.CardView
-            android:id="@+id/submitCard"
-            android:backgroundTint="@color/my_primary"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:cardCornerRadius="20dp"
-            app:cardElevation="10dp"
-            app:contentPadding="20dp"
-            android:layout_margin="20dp">
+            android:layout_height="wrap_content">
 
             <LinearLayout
-                android:id="@+id/submitReport"
-                android:background="@color/my_primary"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:id="@+id/upload"
+                android:layout_width="170dp"
+                android:layout_height="170dp"
+                android:layout_margin="10dp"
+                android:background="@drawable/shape"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:padding="20dp">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Submit Report"
-                    android:textColor="@color/white"
-                    android:textStyle="bold"
-                    android:textSize="20sp"/>
+                    android:layout_gravity="center"
+                    android:text="Upload"
+                    android:textColor="@color/black"
+                    android:textSize="20dp"
+                    android:textStyle="bold" />
+
+                <ImageView
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_marginTop="10dp"
+                    android:src="@drawable/upload" />
 
             </LinearLayout>
 
-        </androidx.cardview.widget.CardView>
+            <FrameLayout
+                android:id="@+id/processedFrame"
+                android:layout_width="170dp"
+                android:layout_height="170dp"
+                android:layout_margin="10dp"
+                android:gravity="center"
+                android:visibility="gone">
+
+                <!-- Your original LinearLayout -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/shape"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:padding="20dp"
+                    android:id="@+id/processed">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:text="Processed"
+                        android:textColor="@color/black"
+                        android:textSize="20dp"
+                        android:textStyle="bold" />
+
+                    <ImageView
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:layout_marginTop="10dp"
+                        android:src="@drawable/tick" />
+                </LinearLayout>
+
+                <!-- Overlay View -->
+
+            </FrameLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <FrameLayout
+                android:id="@+id/detailsFrame"
+                android:layout_width="170dp"
+                android:layout_height="170dp"
+                android:layout_margin="10dp"
+                android:gravity="center"
+                android:visibility="gone">
+
+                <!-- Your original LinearLayout -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/shape"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:padding="20dp"
+                    android:id="@+id/details"
+                    android:clickable="false">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:text="Details"
+                        android:textColor="@color/black"
+                        android:textSize="20dp"
+                        android:textStyle="bold" />
+
+                    <!-- Uncomment if you want to use the ImageView -->
+                    <!--
+                    <ImageView
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:layout_marginTop="10dp"
+                        android:src="@drawable/upload" />
+                    -->
+                </LinearLayout>
+
+                <!-- Overlay View -->
+
+            </FrameLayout>
+
+
+            <FrameLayout
+                android:id="@+id/postFrame"
+            android:layout_width="170dp"
+            android:layout_height="170dp"
+            android:layout_margin="10dp"
+            android:gravity="center"
+                android:visibility="gone">
+
+            <!-- Your original LinearLayout -->
+            <LinearLayout
+                android:id="@+id/post"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/shape"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:padding="20dp"
+                android:clickable="false">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="Post"
+                    android:textColor="@color/black"
+                    android:textSize="20dp"
+                    android:textStyle="bold" />
+
+                <!-- Uncomment if you want to use the ImageView -->
+                <!--
+                <ImageView
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_marginTop="10dp"
+                    android:src="@drawable/upload" />
+                -->
+            </LinearLayout>
+
+            <!-- Overlay View -->
+
+        </FrameLayout>
+
+        </LinearLayout>
+
 
     </LinearLayout>
 
-</RelativeLayout>
+</LinearLayout>

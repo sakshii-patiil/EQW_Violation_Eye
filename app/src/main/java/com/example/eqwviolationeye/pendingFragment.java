@@ -90,7 +90,7 @@ public class pendingFragment extends Fragment {
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                         pending p = arrayList.get(position);
                         String selectedItem = p.getDate() + "," + p.getTime();
-                        Toast.makeText(getActivity(), selectedItem, Toast.LENGTH_SHORT).show();
+//                        Toast.makeText(getActivity(), selectedItem, Toast.LENGTH_SHORT).show();
                         Intent i = new Intent(getContext(), postScreen.class);
                         i.putExtra("date", selectedItem);
                         startActivity(i);
