@@ -1,11 +1,19 @@
 package com.example.eqwviolationeye;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+
+import android.app.DownloadManager;
+import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
+import android.transition.Transition;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -17,6 +25,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.VideoView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.target.SimpleTarget;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -26,6 +36,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.database.collection.BuildConfig;
 import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -37,7 +48,7 @@ import java.util.Arrays;
 
 public class details_layout extends AppCompatActivity {
     String currentUser;
-    DatabaseReference databaseReference;
+    DatabaseReference databaseReference, databaseRef;
     private FirebaseAuth firebaseAuth;
 
     TextView title, tags;
@@ -64,6 +75,7 @@ public class details_layout extends AppCompatActivity {
 
 
         title.setText(date);
+        Intent shareIntent = new Intent(Intent.ACTION_SEND_MULTIPLE);
         post.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -76,8 +88,6 @@ public class details_layout extends AppCompatActivity {
 
                 String shareTitle = String.valueOf(date);
                 String shareSubject = String.valueOf(details);
-
-
 
                 shareIntent.putExtra(Intent.EXTRA_TITLE, shareTitle);
                 shareIntent.putExtra(Intent.EXTRA_SUBJECT, shareSubject);
@@ -109,6 +119,62 @@ public class details_layout extends AppCompatActivity {
 
 //        Toast.makeText(getApplicationContext(), id + date,Toast.LENGTH_SHORT).show();
         mDatabase = FirebaseDatabase.getInstance("https://eqw-violationeye-42382-default-rtdb.firebaseio.com/").getReference(id).child("pending").child(date);
+
+        StorageReference storageRef = FirebaseStorage.getInstance().getReference().child("videos/video.mp4");
+
+
+        databaseRef =FirebaseDatabase.getInstance("https://eqw-violationeye-42382-default-rtdb.firebaseio.com/").getReference(id).child("pending").child(date).child("image_url");
+
+        databaseRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    String videoUrl = dataSnapshot.getValue(String.class);
+                    if (videoUrl != null) {
+                        // Use Glide to download the video from the URL
+                        Glide.with(getApplicationContext())
+                                .load(videoUrl)
+                                .downloadOnly(new SimpleTarget<File>() {
+
+                                    @Override
+                                    public void onResourceReady(@NonNull File resource, @Nullable com.bumptech.glide.request.transition.Transition<? super File> transition) {
+
+                                        Toast.makeText(getApplicationContext(), "Video Downloaded", Toast.LENGTH_SHORT).show();
+                                        // Create a Uri for the downloaded video file
+                                        Uri videoUri = Uri.fromFile(resource);
+
+                                        // Add the video URI as an extra to the Intent
+                                        shareIntent.putExtra(Intent.EXTRA_STREAM, videoUri);
+
+                                        String filePath = resource.getAbsolutePath();
+
+                                        // Set the path of the downloaded video file to the VideoView
+                                        videoView.setVideoPath(filePath);
+
+                                        // Start playback
+                                        videoView.start();
+
+                                    }
+                                    @Override
+                                    public void onLoadFailed(@Nullable Drawable errorDrawable) {
+                                        // Handle download failure
+                                    }
+
+                                });
+                    } else {
+                        // Handle case where video URL is null
+                    }
+                } else {
+                    // Handle case where video data does not exist
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                // Handle error
+            }
+        });
+
 
         mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -149,22 +215,6 @@ public class details_layout extends AppCompatActivity {
 
 
 //                    location.setText(location);
-
-                    StorageReference storageRef = FirebaseStorage.getInstance().getReference().child(videoDownloadUrl);
-                    storageRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                        @Override
-                        public void onSuccess(Uri uri) {
-                            // Handle successful download URL retrieval
-                            String downloadUrl = uri.toString();
-                            downloadVideo(downloadUrl);
-                        }
-                    }).addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            // Handle any errors retrieving the download URL
-                            Log.e("TAG", "Error getting download URL", e);
-                        }
-                    });
                 } else {
                     Log.d("Data", "No data exists at this location");
                 }
@@ -176,60 +226,7 @@ public class details_layout extends AppCompatActivity {
         });
 
 
-
-//        BottomNavigationView bottomNavigationView = findViewById(R.id.bottomNavigationView);
-//
-//        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
-//            @Override
-//            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-//                switch (item.getItemId()) {
-//                    case R.id.report_voilation:
-//                        startActivity(new Intent(ReportTemplate.this, MainActivity.class));
-//                        return true;
-//                    case R.id.voilation_list:
-//                        startActivity(new Intent(ReportTemplate.this, ResultsActivity.class));
-//                        return true;
-//                    default:
-//                        return false;
-//                }
-//            }
-//        });
-
     }
-
-
-
-    private void downloadVideo(String videoDownloadUrl) {
-        // Create a reference to the video file in Firebase Storage
-        StorageReference storageRef = FirebaseStorage.getInstance().getReferenceFromUrl(videoDownloadUrl);
-
-        // Get a temporary file path to store the downloaded video
-        File localFile = null;
-        try {
-            localFile = File.createTempFile("video", "mp4");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        if (localFile != null) {
-            // Download the video file to local storage
-            File finalLocalFile = localFile;
-            storageRef.getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
-                @Override
-                public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
-                    // Play the downloaded video in VideoView
-                    playVideo(finalLocalFile.getPath());
-                }
-            }).addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception e) {
-                    // Handle any errors downloading the video file
-                    Log.e("TAG", "Error downloading video file", e);
-                }
-            });
-        }
-    }
-
     // Method to play the video in VideoView
     private void playVideo(String filePath) {
         // Set the local file path of the downloaded video to the VideoView

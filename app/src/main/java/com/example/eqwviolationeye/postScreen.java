@@ -188,7 +188,7 @@ public class postScreen extends AppCompatActivity {
                 shareIntent.setAction(Intent.ACTION_SEND);
                 shareIntent.putExtra(Intent.EXTRA_TEXT, message);
                 shareIntent.putExtra(Intent.EXTRA_STREAM, imageUri);
-                shareIntent.setType("image/*");
+                shareIntent.setType("video/*");
 
                 // Start the activity to share the data
                 startActivity(Intent.createChooser(shareIntent, "Share via"));
