@@ -54,7 +54,7 @@ public class details_layout extends AppCompatActivity {
     TextView title, tags;
     VideoView videoView;
     EditText details, mentions;
-    String date,id;
+    String date,id, location, imageUri;
     Button post;
     private DatabaseReference mDatabase;
 
@@ -79,38 +79,25 @@ public class details_layout extends AppCompatActivity {
         post.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent shareIntent = new Intent(Intent.ACTION_SEND_MULTIPLE);
 
-                // Set the type of the content to be shared
+                // Get the text from the tweet EditText
+                String message = "The above vehicle is seen violating the traffic rules. I request @"+ location.substring(0,location.indexOf(",")) + "CityPolice to take necessary actions asap. It is causing unnecessary chaos in "+ location.substring(location.indexOf(",")+1) +" area";
+
+                // Create a new Intent
+                Intent shareIntent = new Intent();
+                shareIntent.setAction(Intent.ACTION_SEND);
                 shareIntent.setType("*/*");
 
-                // Add the text data to the Intent
+                shareIntent.putExtra(Intent.EXTRA_TEXT, message+"\nNumberPlate is "+liscenceplate);
+                shareIntent.putExtra(Intent.EXTRA_STREAM, imageUri);
 
-                String shareTitle = String.valueOf(date);
-                String shareSubject = String.valueOf(details);
 
-                shareIntent.putExtra(Intent.EXTRA_TITLE, shareTitle);
-                shareIntent.putExtra(Intent.EXTRA_SUBJECT, shareSubject);
-                shareIntent.putExtra(Intent.EXTRA_TEXT,liscenceplate);
-                // Add the video URI to the Intent
-                ArrayList<Uri> uris = new ArrayList<>();
-                Uri videoUri = Uri.parse("https://firebasestorage.googleapis.com/v0/b/eqw-violationeye-42382.appspot.com/o/demo1%20(1)%20(1)%20(1)%20(1).mp4?alt=media&token=afbcb720-793a-4d14-aa06-ce3109109d5d"); // Replace with actual video URI
-                uris.add(videoUri);
-
-                // Add URIs to the Intent
-                shareIntent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, uris);
-
-                // Start the sharing chooser dialog
+                // Start the activity to share the data
                 startActivity(Intent.createChooser(shareIntent, "Share via"));
             }
         });
 
 
-
-//        firebaseAuth = FirebaseAuth.getInstance();
-//        String userId = String.valueOf(firebaseAuth.getCurrentUser().getUid());
-//        databaseReference = FirebaseDatabase.getInstance().getReference().child("Reports").child(userId).child(report);
-//        FirebaseDatabase.getInstance("https://eqw-violationeye-42382-default-rtdb.firebaseio.com/").getReference(id).child("pending").child(date);
 
         FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
         FirebaseUser currentUser = firebaseAuth.getCurrentUser();
@@ -144,11 +131,12 @@ public class details_layout extends AppCompatActivity {
                                         Uri videoUri = Uri.fromFile(resource);
 
                                         // Add the video URI as an extra to the Intent
-                                        shareIntent.putExtra(Intent.EXTRA_STREAM, videoUri);
-
-                                        String filePath = resource.getAbsolutePath();
 
                                         // Set the path of the downloaded video file to the VideoView
+                                        String filePath = resource.getAbsolutePath();
+
+                                        imageUri = filePath;
+
                                         videoView.setVideoPath(filePath);
 
                                         // Start playback
@@ -182,7 +170,7 @@ public class details_layout extends AppCompatActivity {
                 if (dataSnapshot.exists()) {
                     // Retrieve description and latitude values
 //                    String description = dataSnapshot.child("description").getValue(String.class);
-                    String location = dataSnapshot.child("Location").getValue(String.class);
+                    location = dataSnapshot.child("Location").getValue(String.class);
                     String videoDownloadUrl= dataSnapshot.child("image_url").getValue(String.class);
                     // Now you have the description and latitude values
                     String np = dataSnapshot.child("number_plates").getValue(String.class);
@@ -224,7 +212,6 @@ public class details_layout extends AppCompatActivity {
                 Log.e("Firebase Error", "Error fetching data", databaseError.toException());
             }
         });
-
 
     }
     // Method to play the video in VideoView
