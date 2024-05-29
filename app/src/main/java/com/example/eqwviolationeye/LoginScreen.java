@@ -45,7 +45,6 @@ import java.util.Map;
 public class LoginScreen extends AppCompatActivity {
 
     Button login;
-    private DBHelper dbHelper;
     //Firebase ref = new Firebase(Config.FIREBASE_URL);
     FirebaseDatabase database = FirebaseDatabase.getInstance("https://eqw-violationeye-42382-default-rtdb.firebaseio.com/");
     static public String id;
@@ -64,8 +63,6 @@ public class LoginScreen extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login_screen);
         google = findViewById(R.id.google);
-        dbHelper = new DBHelper(LoginScreen.this);
-
 
         login = findViewById(R.id.loginButton);
         forgotPassword = findViewById(R.id.forgot_password);

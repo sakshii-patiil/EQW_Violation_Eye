@@ -71,10 +71,7 @@ public class IncidentReportScreen extends AppCompatActivity {
 
         id = currentUser.getEmail();
         id = id.substring(0, id.length()-10);
-        // Initializing other items
-        // from layout file
 
-        // method to get the location
 
         binding = ActivityIncidentReportScreenBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
@@ -269,6 +266,7 @@ public class IncidentReportScreen extends AppCompatActivity {
             }
         }
     }
+
 
 
 
