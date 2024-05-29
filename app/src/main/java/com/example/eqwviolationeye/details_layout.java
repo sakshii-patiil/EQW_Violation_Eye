@@ -7,7 +7,12 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.VideoView;
@@ -27,6 +32,8 @@ import com.google.firebase.storage.StorageReference;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 public class details_layout extends AppCompatActivity {
     String currentUser;
@@ -35,10 +42,13 @@ public class details_layout extends AppCompatActivity {
 
     TextView title, tags;
     VideoView videoView;
-    EditText details, address;
+    EditText details, mentions;
     String date,id;
+    Button post;
     private DatabaseReference mDatabase;
 
+    Spinner numberplates;
+    String liscenceplate;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,11 +57,46 @@ public class details_layout extends AppCompatActivity {
         title = findViewById(R.id.title);
         details = findViewById(R.id.description);
         videoView = findViewById(R.id.videoView);
-        address = findViewById(R.id.address);
-
+        post = findViewById(R.id.postBtn);
+        numberplates = findViewById(R.id.tags);
 
         date = getIntent().getStringExtra("date");
-        Toast.makeText(getApplicationContext(),date+" Hiiiiiiiii",Toast.LENGTH_SHORT).show();
+
+
+        title.setText(date);
+        post.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent shareIntent = new Intent(Intent.ACTION_SEND_MULTIPLE);
+
+                // Set the type of the content to be shared
+                shareIntent.setType("*/*");
+
+                // Add the text data to the Intent
+
+                String shareTitle = String.valueOf(date);
+                String shareSubject = String.valueOf(details);
+
+
+
+                shareIntent.putExtra(Intent.EXTRA_TITLE, shareTitle);
+                shareIntent.putExtra(Intent.EXTRA_SUBJECT, shareSubject);
+                shareIntent.putExtra(Intent.EXTRA_TEXT,liscenceplate);
+                // Add the video URI to the Intent
+                ArrayList<Uri> uris = new ArrayList<>();
+                Uri videoUri = Uri.parse("https://firebasestorage.googleapis.com/v0/b/eqw-violationeye-42382.appspot.com/o/demo1%20(1)%20(1)%20(1)%20(1).mp4?alt=media&token=afbcb720-793a-4d14-aa06-ce3109109d5d"); // Replace with actual video URI
+                uris.add(videoUri);
+
+                // Add URIs to the Intent
+                shareIntent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, uris);
+
+                // Start the sharing chooser dialog
+                startActivity(Intent.createChooser(shareIntent, "Share via"));
+            }
+        });
+
+
+
 //        firebaseAuth = FirebaseAuth.getInstance();
 //        String userId = String.valueOf(firebaseAuth.getCurrentUser().getUid());
 //        databaseReference = FirebaseDatabase.getInstance().getReference().child("Reports").child(userId).child(report);
@@ -65,7 +110,7 @@ public class details_layout extends AppCompatActivity {
 //        Toast.makeText(getApplicationContext(), id + date,Toast.LENGTH_SHORT).show();
         mDatabase = FirebaseDatabase.getInstance("https://eqw-violationeye-42382-default-rtdb.firebaseio.com/").getReference(id).child("pending").child(date);
 
-        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+        mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
@@ -74,9 +119,36 @@ public class details_layout extends AppCompatActivity {
                     String location = dataSnapshot.child("Location").getValue(String.class);
                     String videoDownloadUrl= dataSnapshot.child("image_url").getValue(String.class);
                     // Now you have the description and latitude values
+                    String np = dataSnapshot.child("number_plates").getValue(String.class);
+                    // Now you have the description and latitude values
                     Log.d("Video Download URL ", videoDownloadUrl);
 
-                    address.setText(location);
+
+                    ArrayList<String> arr = new ArrayList<>(Arrays.asList(np.split(",")));
+                    ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(getApplicationContext(), android.R.layout.simple_spinner_item, arr);
+                    arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                    // Set the ArrayAdapter to the Spinner
+                    numberplates.setAdapter(arrayAdapter);
+
+
+
+                    numberplates.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                        @Override
+                        public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                            liscenceplate = parent.getItemAtPosition(position).toString();
+                            Toast.makeText(getApplicationContext(),liscenceplate,Toast.LENGTH_SHORT).show();
+                        }
+                        @Override
+                        public void onNothingSelected(AdapterView <?> parent) {
+                        }
+                    });
+
+                    String message = "The above vehicle is seen violating the traffic rules. I request @"+ location.substring(0,location.indexOf(",")) + "CityPolice to take necessary actions asap. It is causing unnecessary chaos in "+ location.substring(location.indexOf(",")+1) +" area";
+                    details.setText(message);
+
+
+
+//                    location.setText(location);
 
                     StorageReference storageRef = FirebaseStorage.getInstance().getReference().child(videoDownloadUrl);
                     storageRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
@@ -124,6 +196,8 @@ public class details_layout extends AppCompatActivity {
 //        });
 
     }
+
+
 
     private void downloadVideo(String videoDownloadUrl) {
         // Create a reference to the video file in Firebase Storage

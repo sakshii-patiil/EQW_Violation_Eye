@@ -1,82 +1,84 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context=".details_layout">
+
+    <Toolbar
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/my_primary"
+        android:padding="10dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:layout_marginRight="12dp"
+            android:src="@drawable/logo" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="sans-serif-medium"
+            android:text="Reports"
+            android:textColor="@color/white"
+            android:textSize="20dp" />
+    </Toolbar>
+
 
     <TextView
         android:id="@+id/title"
-        android:layout_width="343dp"
-        android:layout_height="42dp"
+        android:layout_width="304dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
         android:layout_marginTop="16dp"
         android:hint="Title"
         android:textAlignment="center"
-        android:textSize="16sp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/videoView"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.813" />
+        android:layout_gravity="center"
+        android:textSize="20sp"
+        android:textStyle="bold"/>
 
     <VideoView
         android:id="@+id/videoView"
         android:layout_width="304dp"
-        android:layout_height="167dp"
-        android:layout_marginTop="144dp"
+        android:layout_height="350dp"
+        android:layout_gravity="center"
+        android:textAlignment="center"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
+    <Spinner
         android:id="@+id/tags"
-        android:layout_width="351dp"
-        android:layout_height="28dp"
+        android:layout_marginTop="10dp"
+        android:layout_width="304dp"
+        android:layout_height="wrap_content"
         android:layout_marginBottom="16dp"
-        android:hint="Mentions"
-        app:layout_constraintBottom_toTopOf="@+id/address"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.589"
-        app:layout_constraintStart_toStartOf="parent" />
+        android:layout_gravity="center"/>
 
     <EditText
         android:id="@+id/description"
-        android:layout_width="330dp"
-        android:layout_height="142dp"
+        android:layout_width="304dp"
+        android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
         android:ems="10"
         android:gravity="start|top"
+        android:hint="Complaint"
+        android:text=" "
         android:inputType="textMultiLine"
-        app:layout_constraintBottom_toTopOf="@+id/postBtn"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.492"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <EditText
-        android:id="@+id/address"
-        android:layout_width="347dp"
-        android:layout_height="46dp"
-        android:layout_marginBottom="28dp"
-        android:ems="10"
-        android:inputType="textPostalAddress"
-        android:hint="Location"
-        android:textSize="14sp"
-        app:layout_constraintBottom_toTopOf="@+id/description"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="@+id/tags" />
+        android:layout_gravity="center" />
 
     <Button
         android:id="@+id/postBtn"
-        android:layout_width="wrap_content"
+        android:layout_width="304dp"
+        android:layout_gravity="center"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="84dp"
-        android:text="Post"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent" />
+        android:text="Post" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</LinearLayout>
